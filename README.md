@@ -1,3 +1,0 @@
-# BWaNGO
-
-Blazor WebAssembly Bingo
