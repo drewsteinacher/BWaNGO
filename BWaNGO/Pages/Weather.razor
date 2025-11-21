@@ -2,16 +2,16 @@
 @inject HttpClient Http
 
 <PageTitle>Weather</PageTitle>
+<MudText Typo="Typo.h1">Weather</MudText>
+<br/>
 
-<h1>Weather</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
+<MudText Typo="Typo.body1">This component demonstrates fetching data from the server.</MudText>
 
 @if (forecasts == null)
 {
-    <p>
+    <MudText Typo="Typo.body1">
         <em>Loading...</em>
-    </p>
+    </MudText>
 }
 else
 {
@@ -56,5 +56,4 @@ else
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
-
 }
