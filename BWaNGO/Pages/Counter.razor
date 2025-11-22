@@ -1,4 +1,6 @@
-﻿@page "/counter"
+﻿@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+
+@page "/counter"
 
 <PageTitle>Counter</PageTitle>
 
@@ -7,13 +9,29 @@
 
 <MudText Typo="Typo.body1" role="status">Curent count: @_currentCount</MudText>
 
-<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="IncrementCount">Click Me</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="IncrementCount">Increment</MudButton>
+<MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="ResetCount">Reset</MudButton>
 
 @code {
-    private int _currentCount = 0;
+    private const string CounterKey = "Counter";
 
-    private void IncrementCount()
+    private int _currentCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentCount = await LocalStorageService.GetItemAsync<int>(CounterKey);
+        await base.OnInitializedAsync();
+    }
+
+    private async Task IncrementCount()
     {
         _currentCount++;
+        await LocalStorageService.SetItemAsync(CounterKey, _currentCount);
+    }
+
+    private async Task ResetCount()
+    {
+        _currentCount = 0;
+        await LocalStorageService.RemoveItemAsync(CounterKey);
     }
 }
