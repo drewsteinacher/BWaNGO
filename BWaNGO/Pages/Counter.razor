@@ -19,7 +19,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _currentCount = await LocalStorageService.GetItemAsync<int>(CounterKey);
+        try
+        {
+            _currentCount = await LocalStorageService.GetItemAsync<int>(CounterKey);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error retrieving counter from local storage, clearing: " + e.Message);
+            await ResetCount();
+        }
         await base.OnInitializedAsync();
     }
 
