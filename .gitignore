@@ -53,7 +53,8 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
-# From Rider
+# Rider
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+.idea
