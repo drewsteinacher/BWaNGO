@@ -1,6 +1,10 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+@inject IJSRuntime JsRuntime
 
 @page "/labels"
+
+<NavigationLock ConfirmExternalNavigation="@CanSaveLabels()"
+                OnBeforeInternalNavigation="UnsavedChangesDialog" />
 
 <PageTitle>Labels</PageTitle>
 
@@ -82,5 +86,21 @@
     {
         return rawLabelText
             .Split(Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+    }
+
+    private async Task UnsavedChangesDialog(LocationChangingContext context)
+    {
+        if (!CanSaveLabels())
+        {
+            return;
+        }
+
+        var isConfirmed = await JsRuntime.InvokeAsync<bool>("confirm", 
+            "You have unsaved changes. Are you sure you want to leave?");
+
+        if (!isConfirmed)
+        {
+            context.PreventNavigation();
+        }
     }
 }
