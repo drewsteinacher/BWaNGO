@@ -1,0 +1,86 @@
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+
+@page "/labels"
+
+<PageTitle>Labels</PageTitle>
+
+<MudText Typo="Typo.h2">Labels</MudText>
+<br/>
+
+<MudText Typo="Typo.body1">Enter custom bingo square labels here, one per line.</MudText>
+<MudText Typo="Typo.body1">Bingo is usually played with 75 numbers, but cards hold 24 each (the center space is free).</MudText>
+<MudText Typo="Typo.body1">If you do not enter at least 24 labels, the remaining squares will be filled by sampling.</MudText>
+
+<br/>
+
+<MudTextField T="string"
+              Label="Labels"
+              Variant="Variant.Filled"
+              Lines="25"
+              AutoGrow="false"
+              @bind-Value="@_currentRawLabelText"
+              Immediate="true"
+/>
+
+<MudText Typo="Typo.body1">@ParseIndividualLabels(_currentRawLabelText).Length Labels</MudText>
+
+<MudButton Variant="Variant.Outlined"
+           Color="Color.Warning"
+           OnClick="@(async (MouseEventArgs _) => await ReadLabels())">
+    Reset
+</MudButton>
+<MudButton Variant="Variant.Filled"
+           Color="Color.Primary"
+           Disabled="!CanSaveLabels()"
+           OnClick="@(async (MouseEventArgs _) =>
+                    {
+                        await SaveLabels(_currentRawLabelText);
+                    })">
+    Save
+</MudButton>
+
+@if (!CanSaveLabels())
+{
+    <MudText Typo="Typo.body2" Color="Color.Success">Saved @ParseIndividualLabels(_savedRawLabelText).Length labels!</MudText>
+}
+
+@code {
+    private const string LabelsKey = "Labels";
+    
+    private string _currentRawLabelText = string.Empty;
+    private string _savedRawLabelText = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadLabels();
+        await base.OnInitializedAsync();
+    }
+    
+    private async ValueTask ReadLabels()
+    {
+        try
+        {
+            _currentRawLabelText = await LocalStorageService.GetItemAsStringAsync(LabelsKey) ?? string.Empty;
+            _savedRawLabelText = _currentRawLabelText;
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine("Error retrieving labels from local storage, clearing: " + exception.Message);
+            await SaveLabels("");
+        }
+    }
+    
+    private ValueTask SaveLabels(string rawLabels)
+    {
+        _savedRawLabelText = rawLabels;
+        return LocalStorageService.SetItemAsStringAsync(LabelsKey, rawLabels);
+    }
+    
+    private bool CanSaveLabels() => _currentRawLabelText != _savedRawLabelText;
+    
+    private static string[] ParseIndividualLabels(string rawLabelText)
+    {
+        return rawLabelText
+            .Split(Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+    }
+}
