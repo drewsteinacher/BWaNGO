@@ -1,7 +1,8 @@
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+@inject ILabelsService labelsService
 @inject IJSRuntime JsRuntime
 
 @page "/labels"
+@using BWaNGO.Services
 
 <NavigationLock ConfirmExternalNavigation="@CanSaveLabels()"
                 OnBeforeInternalNavigation="UnsavedChangesDialog" />
@@ -26,31 +27,24 @@
               Immediate="true"
 />
 
-<MudText Typo="Typo.body1">@ParseIndividualLabels(_currentRawLabelText).Length Labels</MudText>
+<MudText Typo="Typo.body1" Color="CanSaveLabels() ? Color.Default : Color.Success">
+    @LabelsService.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
+</MudText>
 
 <MudButton Variant="Variant.Outlined"
            Color="Color.Warning"
-           OnClick="@(async (MouseEventArgs _) => await ReadLabels())">
+           Disabled="!CanSaveLabels()"
+           OnClick="@ReadLabels">
     Reset
 </MudButton>
 <MudButton Variant="Variant.Filled"
            Color="Color.Primary"
            Disabled="!CanSaveLabels()"
-           OnClick="@(async (MouseEventArgs _) =>
-                    {
-                        await SaveLabels(_currentRawLabelText);
-                    })">
+           OnClick="@SaveLabels">
     Save
 </MudButton>
 
-@if (!CanSaveLabels())
-{
-    <MudText Typo="Typo.body2" Color="Color.Success">Saved @ParseIndividualLabels(_savedRawLabelText).Length labels!</MudText>
-}
-
 @code {
-    private const string LabelsKey = "Labels";
-    
     private string _currentRawLabelText = string.Empty;
     private string _savedRawLabelText = string.Empty;
 
@@ -60,33 +54,34 @@
         await base.OnInitializedAsync();
     }
     
-    private async ValueTask ReadLabels()
+    private async Task ReadLabels()
     {
         try
         {
-            _currentRawLabelText = await LocalStorageService.GetItemAsStringAsync(LabelsKey) ?? string.Empty;
+            _currentRawLabelText = await labelsService.GetRaw() ?? string.Empty;
             _savedRawLabelText = _currentRawLabelText;
         }
         catch (Exception exception)
         {
             Console.WriteLine("Error retrieving labels from local storage, clearing: " + exception.Message);
-            await SaveLabels("");
+            await ClearLabels();
         }
     }
     
-    private ValueTask SaveLabels(string rawLabels)
+    private Task SaveLabels()
     {
-        _savedRawLabelText = rawLabels;
-        return LocalStorageService.SetItemAsStringAsync(LabelsKey, rawLabels);
+        _savedRawLabelText = _currentRawLabelText;
+        return labelsService.SaveAsync(_currentRawLabelText);
     }
-    
-    private bool CanSaveLabels() => _currentRawLabelText != _savedRawLabelText;
-    
-    private static string[] ParseIndividualLabels(string rawLabelText)
+
+    private Task ClearLabels()
     {
-        return rawLabelText
-            .Split(Environment.NewLine, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        _savedRawLabelText = string.Empty;
+        return labelsService.SaveAsync(string.Empty);
     }
+
+    private bool CanSaveLabels()
+        => _currentRawLabelText != _savedRawLabelText;
 
     private async Task UnsavedChangesDialog(LocationChangingContext context)
     {
