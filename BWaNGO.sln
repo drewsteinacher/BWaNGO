@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BWaNGO", "BWaNGO\BWaNGO.csproj", "{26DD64A5-2747-4959-9D7A-99955C58C2F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BWaNGO.Tests", "BWaNGO.Tests\BWaNGO.Tests.csproj", "{83F9D0E9-5C4D-4459-A00C-92284AEE151A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{26DD64A5-2747-4959-9D7A-99955C58C2F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DD64A5-2747-4959-9D7A-99955C58C2F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DD64A5-2747-4959-9D7A-99955C58C2F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F9D0E9-5C4D-4459-A00C-92284AEE151A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F9D0E9-5C4D-4459-A00C-92284AEE151A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F9D0E9-5C4D-4459-A00C-92284AEE151A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F9D0E9-5C4D-4459-A00C-92284AEE151A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
