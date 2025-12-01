@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "BWaNGO",
   "resources": {
-    "hash": "sha256-Oc1JsZ4InZHepEcj8Qax4QX5dhOwh7tKFOeycj4I/rs=",
+    "hash": "sha256-96L+rV4vzFd8rckUWo7k0p4bUJumdZjz+uEXoqT9ydM=",
     "fingerprinting": {
       "Blazored.LocalStorage.12n6dz54qr.wasm": "Blazored.LocalStorage.wasm",
       "Microsoft.AspNetCore.Components.lmzd7i56ul.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -46,7 +46,7 @@
       "System.Threading.q2tgddxke7.wasm": "System.Threading.wasm",
       "System.t4d4s3f398.wasm": "System.wasm",
       "System.Private.CoreLib.jpewwx6qwj.wasm": "System.Private.CoreLib.wasm",
-      "BWaNGO.fsfa9vbg5q.wasm": "BWaNGO.wasm",
+      "BWaNGO.u22p897851.wasm": "BWaNGO.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.noby4tlk4d.js": "dotnet.native.js",
       "dotnet.native.qe75a9vfqn.wasm": "dotnet.native.wasm",
@@ -115,7 +115,7 @@
       "System.Text.RegularExpressions.jql2ca2cyx.wasm": "sha256-i+5eC7Ak69BbndIWYMv7ijJTflqZG8YnjuNHHjboXcQ=",
       "System.Threading.q2tgddxke7.wasm": "sha256-zncUNmLvW8+ubA+sqWx5FiQfdH+7iXKdHOZT34w96r0=",
       "System.t4d4s3f398.wasm": "sha256-fVP2BxRRKpBA0PmBbKxmO45bXDrAXVn1GthlDclLbeU=",
-      "BWaNGO.fsfa9vbg5q.wasm": "sha256-b6MePgGf4m9eUfTDUi4XjE1aLnOLwqK9kAsdbT3PUbQ="
+      "BWaNGO.u22p897851.wasm": "sha256-Ou38wqvYe63UmHcsjEJHuwQ2cHEoQWIqTl23TVD3CDI="
     }
   },
   "cacheBootResources": true,
