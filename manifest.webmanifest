@@ -8,6 +8,18 @@
   "background_color": "#32333d",
   "prefer_related_applications": false,
   "icons": [
+      {
+        "src": "/web-app-manifest-192x192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "/web-app-manifest-512x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+      },
        {
          "src": "windows11/SmallTile.scale-100.png",
          "sizes": "71x71"
@@ -455,18 +467,6 @@
        {
          "src": "ios/1024.png",
          "sizes": "1024x1024"
-       },
-       {
-         "src": "/web-app-manifest-192x192.png",
-         "sizes": "192x192",
-         "type": "image/png",
-         "purpose": "maskable"
-       },
-       {
-         "src": "/web-app-manifest-512x512.png",
-         "sizes": "512x512",
-         "type": "image/png",
-         "purpose": "maskable"
        }
    ]
 }
