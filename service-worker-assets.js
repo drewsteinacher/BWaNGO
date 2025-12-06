@@ -1,5 +1,5 @@
 self.assetsManifest = {
-  "version": "gSGGbTHX",
+  "version": "PGjl6fG0",
   "assets": [
     {
       "hash": "sha256-+58cxpYCxyQFoIjmzRIt04ERg6d209u5w3UBM8hucTE=",
@@ -14,8 +14,8 @@ self.assetsManifest = {
       "url": "_content/MudBlazor/MudBlazor.min.js"
     },
     {
-      "hash": "sha256-YR8dsybUsQGSIBw/dk9zt2VQK91ZFIbQZLKlSsdRN+M=",
-      "url": "_framework/BWaNGO.fk8pxm96sg.wasm"
+      "hash": "sha256-IVeL3hBt13mtgWABuiGg5MZ6uauBnziS8qHjYDO7M48=",
+      "url": "_framework/BWaNGO.zvq75s1wu0.wasm"
     },
     {
       "hash": "sha256-OaMAAd5n7ORfyur5e3QIyEVKJ76MKIvwbg7/icnnYcU=",
@@ -190,7 +190,7 @@ self.assetsManifest = {
       "url": "_framework/System.t4d4s3f398.wasm"
     },
     {
-      "hash": "sha256-es9fKtuRCna5rkuBMYLeczKzBnvI/5zKGlZgH7M5gdA=",
+      "hash": "sha256-l7DmySL81UUm4xQfvCHEyTmu8xHL6lVZs/bQnmRicHo=",
       "url": "_framework/blazor.boot.json"
     },
     {
@@ -270,7 +270,7 @@ self.assetsManifest = {
       "url": "favicon.svg"
     },
     {
-      "hash": "sha256-sTSNLAJML+cHsrciwy7tPu1kAWLoQHCDYGX0TL0kQuI=",
+      "hash": "sha256-pKJQv59aMnRfxHeT6oGu6z4yywdtBSl73XHPczrtXE4=",
       "url": "index.html"
     },
     {
