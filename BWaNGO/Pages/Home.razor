@@ -7,3 +7,61 @@
 
 <MudText Typo="Typo.body1">Welcome to your new app.</MudText>
 <MudText Typo="Typo.body1">This is a test.</MudText>
+
+<br/>
+
+<MudGrid Justify="Justify.SpaceBetween" Spacing="3">
+    @for (var i = 0; i < 25; i++)
+    {
+        var localIndex = i + 1;
+        <MudItem xs="2">
+            <MudPaper>
+                @{
+                    // Test Pattern Styling
+                    var style = localIndex < 20
+                        ? "height: 13vh; text-transform: none;"
+                        : "height: 13vh; text-transform: none; border: white 1px solid;";
+                }
+                
+                @if (localIndex % 5 == 0)
+                {
+                    <MudButton Variant="Variant.Filled"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               Style="@style"
+                               Color="Color.Success"
+                    >
+                        @($"WINNING item {localIndex} is here and is very very long!")
+                    </MudButton>
+                }
+                else if (localIndex % 2 == 0)
+                {
+                    <MudButton Variant="Variant.Filled"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               Style="@style"
+                               Color="Color.Primary"
+                    >
+                        @($"SELECTED item {localIndex} is here and is very very long!")
+                    </MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Text"
+                               Size="Size.Large"
+                               FullWidth="true"
+                               Style="@style"
+                               Color="Color.Surface"
+                    >
+                        @($"Normal item {localIndex} is here and is long, very very long!")
+                    </MudButton>
+                }
+            </MudPaper>
+        </MudItem>
+        
+        @if(localIndex % 5 == 0)
+        {
+            <MudFlexBreak/>
+        }
+    }
+</MudGrid>
