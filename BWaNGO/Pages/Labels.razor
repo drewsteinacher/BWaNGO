@@ -1,4 +1,4 @@
-@inject ILabelsService labelsService
+@inject ILabelsService LabelsService
 @inject IJSRuntime JsRuntime
 
 @page "/labels"
@@ -9,7 +9,7 @@
 
 <PageTitle>Labels</PageTitle>
 
-<MudText Typo="Typo.h2">Labels</MudText>
+<MudText Typo="Typo.h5">Labels</MudText>
 <br/>
 
 <MudText Typo="Typo.body1">Enter custom bingo square labels here, one per line.</MudText>
@@ -30,7 +30,7 @@
 />
 
 <MudText Typo="Typo.body1" Color="CanSaveLabels() ? Color.Default : Color.Success">
-    @LabelsService.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
+    @Services.LabelsService.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
 </MudText>
 
 <MudButton Variant="Variant.Outlined"
@@ -60,7 +60,7 @@
     {
         try
         {
-            _currentRawLabelText = await labelsService.GetRaw() ?? string.Empty;
+            _currentRawLabelText = await LabelsService.GetRaw() ?? string.Empty;
             _savedRawLabelText = _currentRawLabelText;
         }
         catch (Exception exception)
@@ -73,13 +73,13 @@
     private Task SaveLabels()
     {
         _savedRawLabelText = _currentRawLabelText;
-        return labelsService.SaveAsync(_currentRawLabelText);
+        return LabelsService.SaveAsync(_currentRawLabelText);
     }
 
     private Task ClearLabels()
     {
         _savedRawLabelText = string.Empty;
-        return labelsService.SaveAsync(string.Empty);
+        return LabelsService.SaveAsync(string.Empty);
     }
 
     private bool CanSaveLabels()
