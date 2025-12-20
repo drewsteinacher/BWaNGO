@@ -100,7 +100,8 @@ public class BingoBoardTests
             square.IsPartOfWinningSolution.Should().BeFalse();
         }
         
-        board.MarkWinningSolutions();
+        var result = board.MarkWinningSolutions();
+        result.Should().BeTrue();
         
         // Check that solution has been assigned
         foreach (var (row, column) in patternCoordinates)
@@ -133,7 +134,9 @@ public class BingoBoardTests
             square.IsPartOfWinningSolution.Should().BeFalse();
         }
         
-        board.MarkWinningSolutions();
+        var result = board.MarkWinningSolutions();
+        
+        result.Should().BeFalse();
         
         // Check that solution has been not assigned
         foreach (var (row, column) in patternCoordinates)

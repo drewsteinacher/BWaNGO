@@ -1,8 +1,8 @@
-@inject ILabelsService LabelsService
+@inject ILabelsRepository LabelsRepository
 @inject IJSRuntime JsRuntime
 
 @page "/labels"
-@using BWaNGO.Services
+@using BWaNGO.Repositories
 
 <NavigationLock ConfirmExternalNavigation="@CanSaveLabels()"
                 OnBeforeInternalNavigation="UnsavedChangesDialog" />
@@ -30,7 +30,7 @@
 />
 
 <MudText Typo="Typo.body1" Color="CanSaveLabels() ? Color.Default : Color.Success">
-    @Services.LabelsService.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
+    @Repositories.LabelsRepository.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
 </MudText>
 
 <MudButton Variant="Variant.Outlined"
@@ -58,28 +58,14 @@
     
     private async Task ReadLabels()
     {
-        try
-        {
-            _currentRawLabelText = await LabelsService.GetRaw() ?? string.Empty;
-            _savedRawLabelText = _currentRawLabelText;
-        }
-        catch (Exception exception)
-        {
-            Console.WriteLine("Error retrieving labels from local storage, clearing: " + exception.Message);
-            await ClearLabels();
-        }
+        _currentRawLabelText = await LabelsRepository.GetRaw() ?? string.Empty;
+        _savedRawLabelText = _currentRawLabelText;
     }
     
     private Task SaveLabels()
     {
         _savedRawLabelText = _currentRawLabelText;
-        return LabelsService.SaveAsync(_currentRawLabelText);
-    }
-
-    private Task ClearLabels()
-    {
-        _savedRawLabelText = string.Empty;
-        return LabelsService.SaveAsync(string.Empty);
+        return LabelsRepository.SaveAsync(_currentRawLabelText);
     }
 
     private bool CanSaveLabels()

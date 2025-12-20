@@ -43,8 +43,9 @@ public class BingoBoard
         }
     }
 
-    public void MarkWinningSolutions()
+    public bool MarkWinningSolutions()
     {
+        var hasWinningSolution = false;
         var patternIdToSquares = Squares
             .Where(s => s.PatternId is not null)
             .GroupBy(s => s.PatternId!.Value)
@@ -54,11 +55,14 @@ public class BingoBoard
         {
             if (squares.All(square => square.IsMarked))
             {
+                hasWinningSolution = true;
                 foreach (var square in squares)
                 {
                     square.IsPartOfWinningSolution = true;
                 }
             }
         }
+
+        return hasWinningSolution;
     }
 }

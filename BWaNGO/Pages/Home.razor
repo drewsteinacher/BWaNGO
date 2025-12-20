@@ -1,83 +1,58 @@
-﻿@page "/"
+﻿@inject IBingoBoardRepository BingoBoardRepository
+@inject ILabelsRepository LabelsRepository
+@inject IBingoBoardGenerator BingoBoardGenerator
+
+@page "/"
+@using BWaNGO.Models
+@using BWaNGO.Repositories
+@using BWaNGO.Components
+@using BWaNGO.Generation
+@using BWaNGO.Generation.Presets
 
 <PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h5">Hello World!</MudText>
-<br/>
+@if (_board is null && _labels.Count == 0)
+{
+    <MudText>No labels found! Add some labels on <MudLink Href="Labels">the Labels page</MudLink>.</MudText>
+}
+else
+{
+    // TODO: Make the title editable after a click on something
+    <MudTextField T="string" Text="Board Title Here" Typo="Typo.h3" Variant="Variant.Text"></MudTextField>
+    
+    <br/>
+    
+    // TODO: Review if this is the best way to organize/pass down information
+    <BingoBoardComponent
+        Board="_board"
+        IsEditMode="_isEditMode"
+        OnBoardChanged="newBoard => _board = newBoard"
+    />
+}
 
-<MudText Typo="Typo.body1">Welcome to your new app.</MudText>
-<MudText Typo="Typo.body1">This is a test.</MudText>
-
-<br/>
-
-<MudGrid Justify="Justify.SpaceBetween" Spacing="3">
-    @for (var i = 0; i < 25; i++)
+@code {
+    private BingoBoard? _board;
+    private List<string> _labels = [];
+    private bool _isEditMode = false;
+    
+    protected override async Task OnInitializedAsync()
     {
-        // This has to be here to ensure the paper matches the item width
-        // This only seems to affect "normal" items, since presumably the filled ones cover the paper
-        const string minWidth = "min-width: 15vw;";
-
-        var localIndex = i + 1;
-        <MudItem xs="2">
-            <MudPaper Style="@minWidth">
-                @{
-                    
-                    var style = "height: 13vh; text-transform: none;";
-                    
-                    // Test Pattern Styling with a border
-                    if (localIndex >= 20)
-                    {
-                        style += "border: white 1px solid;";
-                    }
-
-                    style += minWidth;
-
-                    // TODO: Could be determined via string length and/or screen size detection, the latter is harder
-                    style += "font-size: 0.75rem;";
-                }
-                
-                @if (localIndex % 5 == 0)
-                {
-                    <MudButton Variant="Variant.Filled"
-                               Size="Size.Large"
-                               FullWidth="true"
-                               Style="@style"
-                               Color="Color.Success">
-                        <MudText Typo="Typo.caption">
-                            @($"WINNING item {localIndex} is here and is very very long!")
-                        </MudText>
-                    </MudButton>
-                }
-                else if (localIndex % 2 == 0)
-                {
-                    <MudButton Variant="Variant.Filled"
-                               Size="Size.Large"
-                               FullWidth="true"
-                               Style="@style"
-                               Color="Color.Primary">
-                        <MudText Typo="Typo.caption">
-                            @($"SELECTED item {localIndex} is here and is very very long!")
-                        </MudText>
-                    </MudButton>
-                }
-                else
-                {
-                    <MudButton Variant="Variant.Text"
-                               Size="Size.Large"
-                               FullWidth="true"
-                               Style="@style"
-                               Color="Color.Surface">
-                        <MudText Typo="Typo.caption">
-                            @($"Normal item {localIndex} is here and is long, very very long!")
-                        </MudText>
-                    </MudButton>
-                }
-            </MudPaper>
-        </MudItem>
-        
-        @if(localIndex % 5 == 0)
+        _board = await BingoBoardRepository.Get();
+        if (_board is null)
         {
-            <MudFlexBreak/>
+            _labels = await LabelsRepository.Get();
+            if (_labels.Count > 0)
+            {
+                GenerateBoard(_labels);
+            }
         }
+
+        await base.OnInitializedAsync();
     }
-</MudGrid>
+
+    private void GenerateBoard(List<string> labels)
+    {
+        _board = BingoBoardGenerator.Generate(labels, new StandardBingoPreset());
+    }
+
+}

@@ -53,8 +53,7 @@ public class BingoBoardBuilderTests
         var allLabels = allSquares.Select(s => s.Label).Distinct().Order().ToList();
         allLabels.Should().BeEquivalentTo(labels.Distinct().OrderBy(l => l).ToList());
     }
-    
-    // WithSize_DoesNotAllowZero
+
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
@@ -64,8 +63,7 @@ public class BingoBoardBuilderTests
         
         action.Should().Throw<ArgumentException>().WithMessage("Square size must be at least 1");
     }
-    
-    // WithSize_SetsRowsAndColumns
+
     [Fact]
     public void WithSize_SetsRowsAndColumns()
     {
@@ -80,7 +78,6 @@ public class BingoBoardBuilderTests
         board.Columns.Should().Be(squareSize);
     }
 
-    // WithFreeSquare_DoesNotAllowNegativeCoordinates
     [Theory]
     [InlineData(-1, 0)]
     [InlineData(0, -1)]
@@ -91,7 +88,6 @@ public class BingoBoardBuilderTests
         action.Should().Throw<ArgumentException>().WithMessage("Square coordinates must be non-negative");
     }
 
-    // WithFreeSquare_AddsFreeSquareWithValidCoordinates
     [Fact]
     public void WithFreeSquare_AddsFreeSquareWithValidCoordinates()
     {
@@ -108,8 +104,7 @@ public class BingoBoardBuilderTests
         var freeSquare = board.GetSquare(freeRow, freeColumn);
         freeSquare.Should().BeOfType<FreeBingoSquare>();
     }
-    
-    // WithWinningPattern_SetsUniquePatternIds
+
     [Fact]
     public void WithWinningPattern_SetsUniquePatternIds()
     {

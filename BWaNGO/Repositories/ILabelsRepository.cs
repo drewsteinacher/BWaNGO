@@ -1,8 +1,8 @@
 using System.Reflection.Emit;
 
-namespace BWaNGO.Services;
+namespace BWaNGO.Repositories;
 
-public interface ILabelsService
+public interface ILabelsRepository
 {
     Task<List<string>> Get();
     
