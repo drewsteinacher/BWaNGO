@@ -1,6 +1,6 @@
 namespace BWaNGO.Models;
 
-public class BingoSquare(string label)
+public class BingoSquare(string label, bool initialMarking = false)
 {
     /// <summary>
     /// The label/text shown on the square
@@ -11,11 +11,11 @@ public class BingoSquare(string label)
     /// Identifiers for the pattern conditions this square is a part of
     /// </summary>
     public List<int> PatternIds { get; set; } = [];
-    
+
     /// <summary>
     /// If the square is currently marked/selected
     /// </summary>
-    public bool IsMarked { get; private set; }
+    public bool IsMarked { get; private set; } = initialMarking;
 
     /// <summary>
     /// Marks the square to ensure any custom logic is executed

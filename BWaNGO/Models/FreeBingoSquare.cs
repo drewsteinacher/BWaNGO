@@ -1,6 +1,6 @@
 namespace BWaNGO.Models;
 
-public sealed class FreeBingoSquare() : BingoSquare("FREE")
+public sealed class FreeBingoSquare() : BingoSquare("FREE", true)
 {
     /// <inheritdoc/>
     public override void UnMark()

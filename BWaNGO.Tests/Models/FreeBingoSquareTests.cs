@@ -9,10 +9,10 @@ public class FreeBingoSquareTests
     public void Mark_Marks()
     {
         var square = new FreeBingoSquare();
-        square.IsMarked.Should().BeFalse();
+        square.IsMarked.Should().BeTrue();
         
         square.Mark();
-        
+
         square.IsMarked.Should().BeTrue();
     }
 
