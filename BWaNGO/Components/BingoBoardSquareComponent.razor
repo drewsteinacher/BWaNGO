@@ -65,6 +65,7 @@
 
     private void OnClicked()
     {
+        Console.WriteLine("Square clicked: " + Index);
         if (Square.IsMarked)
         {
             Square.UnMark();
@@ -73,7 +74,7 @@
         {
             Square.Mark();
         }
-        Board.GetWinningPatterns();
+        // Board.GetWinningPatterns();
         StateHasChanged();
         BoardChanged.InvokeAsync(Board);
     }

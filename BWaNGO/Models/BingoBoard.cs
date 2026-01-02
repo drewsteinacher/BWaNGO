@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace BWaNGO.Models;
 
 public class BingoBoard
 {
+    [JsonConstructor]
     public BingoBoard(List<BingoSquare> squares, int rows, int columns)
     {
         if (rows <= 0)
@@ -30,6 +33,7 @@ public class BingoBoard
 
     public int Columns { get; init; }
 
+    [JsonInclude]
     private List<BingoSquare> Squares { get; init; }
     
     public BingoSquare GetSquare(int row, int column)

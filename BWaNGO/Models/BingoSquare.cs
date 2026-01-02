@@ -1,6 +1,6 @@
 namespace BWaNGO.Models;
 
-public class BingoSquare(string label, bool initialMarking = false)
+public class BingoSquare(string label, bool isMarked = false)
 {
     /// <summary>
     /// The label/text shown on the square
@@ -15,7 +15,7 @@ public class BingoSquare(string label, bool initialMarking = false)
     /// <summary>
     /// If the square is currently marked/selected
     /// </summary>
-    public bool IsMarked { get; private set; } = initialMarking;
+    public bool IsMarked { get; private set; } = isMarked;
 
     /// <summary>
     /// Marks the square to ensure any custom logic is executed

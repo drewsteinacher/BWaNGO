@@ -2,18 +2,15 @@
 
 @using BWaNGO.Models
 
-@if (Board is null)
-{
-    <MudText>No board data provided!</MudText>
-    return;
-}
-
 <MudGrid Justify="Justify.SpaceBetween" Spacing="3">
     @foreach(var index in Enumerable.Range(0, Board.Rows * Board.Columns))
     {
         var square = Board.GetSquare(index % Board.Rows, index / Board.Rows);
 
-        <BingoBoardSquareComponent @bind-Board="Board" @bind-Square="square" Index="index"/>
+        <BingoBoardSquareComponent @bind-Board="Board"
+                                   @bind-Board:after="AfterBoardChanged"
+                                   @bind-Square="square"
+                                   Index="index"/>
 
         @if((index + 1) % Board.Rows == 0)
         {
@@ -24,16 +21,18 @@
 
 @code {
     [Parameter]
-    public BingoBoard? Board { get; set; }
+    public required BingoBoard Board { get; set; }
+    
+    [Parameter]
+    public EventCallback<BingoBoard> BoardChanged { get; set; }
 
     [Parameter]
     public bool IsEditMode { get; set; }
 
-    [Parameter]
-    public Action<BingoBoard>? OnBoardChanged { get; set; }
-    
-    private void OnSquareChanged(BingoSquare changedSquare)
+    private Task AfterBoardChanged()
     {
-        Board?.GetWinningPatterns();
+        Console.WriteLine("Board changed in BingoBoardComponent.");
+        return BoardChanged.InvokeAsync(Board);
     }
+
 }
