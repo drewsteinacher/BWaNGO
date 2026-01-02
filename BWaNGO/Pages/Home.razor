@@ -14,21 +14,19 @@
 @if (_board is null && _labels.Count == 0)
 {
     <MudText>No labels found! Add some labels on <MudLink Href="Labels">the Labels page</MudLink>.</MudText>
+    return;
 }
-else
-{
-    // TODO: Make the title editable after a click on something
-    <MudTextField T="string" Text="Board Title Here" Typo="Typo.h3" Variant="Variant.Text"></MudTextField>
+
+@* TODO: Make the title editable after a click on something*@
+<MudTextField T="string" Text="Board Title Here" Typo="Typo.h3" Variant="Variant.Text"></MudTextField>
     
-    <br/>
-    
-    // TODO: Review if this is the best way to organize/pass down information
-    <BingoBoardComponent
-        Board="_board"
-        IsEditMode="_isEditMode"
-        OnBoardChanged="newBoard => _board = newBoard"
-    />
-}
+<br/>
+
+<BingoBoardComponent
+    Board="_board"
+    IsEditMode="_isEditMode"
+    OnBoardChanged="newBoard => _board = newBoard"
+/>
 
 @code {
     private BingoBoard? _board;

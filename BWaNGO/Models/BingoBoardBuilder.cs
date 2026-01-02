@@ -87,7 +87,7 @@ public class BingoBoardBuilder : IBingoBoardBuilder
             var coordinateList = WinningPatternCoordinates[patternIndex];
             foreach (var (row, column) in coordinateList)
             {
-                boardSquares[row * Rows + column].PatternId = patternIndex;
+                boardSquares[row * Rows + column].PatternIds.Add(patternIndex);
             }
         }
 

@@ -82,7 +82,7 @@ public class BingoBoardTests
     }
 
     [Fact]
-    public void MarkWinningSolutions_MarksSolution_IfPatternIsFullyMarked()
+    public void GetWinningPatterns_MarksSolution_IfPatternIsFullyMarked()
     {
         const int rows = 2;
         const int cols = 2;
@@ -96,23 +96,15 @@ public class BingoBoardTests
         {
             var square = board.GetSquare(row, column);
             square.Mark();
-            square.PatternId = 1;
-            square.IsPartOfWinningSolution.Should().BeFalse();
+            square.PatternIds.Add(1);
         }
         
-        var result = board.MarkWinningSolutions();
-        result.Should().BeTrue();
-        
-        // Check that solution has been assigned
-        foreach (var (row, column) in patternCoordinates)
-        {
-            var square = board.GetSquare(row, column);
-            square.IsPartOfWinningSolution.Should().BeTrue();
-        }
+        var result = board.GetWinningPatterns();
+        result.Should().BeEquivalentTo([1]);
     }
 
     [Fact]
-    public void MarkWinningSolutions_DoesNotMarkSolution_IfPatternIsNotFullyMarked()
+    public void GetWinningPatterns_DoesNotMarkSolution_IfPatternIsNotFullyMarked()
     {
         const int rows = 2;
         const int cols = 2;
@@ -130,19 +122,11 @@ public class BingoBoardTests
                 square.Mark();
             }
 
-            square.PatternId = 1;
-            square.IsPartOfWinningSolution.Should().BeFalse();
+            square.PatternIds.Add(1);
         }
         
-        var result = board.MarkWinningSolutions();
+        var result = board.GetWinningPatterns();
         
-        result.Should().BeFalse();
-        
-        // Check that solution has been not assigned
-        foreach (var (row, column) in patternCoordinates)
-        {
-            var square = board.GetSquare(row, column);
-            square.IsPartOfWinningSolution.Should().BeFalse();
-        }
+        result.Should().BeEmpty();
     }
 }

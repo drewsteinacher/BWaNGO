@@ -43,26 +43,25 @@ public class BingoBoard
         }
     }
 
-    public bool MarkWinningSolutions()
+    public List<int> GetWinningPatterns()
     {
-        var hasWinningSolution = false;
+        var winningPatternIds = new List<int>();
         var patternIdToSquares = Squares
-            .Where(s => s.PatternId is not null)
-            .GroupBy(s => s.PatternId!.Value)
-            .ToDictionary(g => g.Key, g => g.ToList());
+            .SelectMany(square => square.PatternIds.Select(patternId => (patternId, square)))
+            .GroupBy(pair => pair.patternId)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(pair => pair.square).ToList()
+            );
 
-        foreach (var (_, squares) in patternIdToSquares)
+        foreach (var (patternId, squares) in patternIdToSquares)
         {
             if (squares.All(square => square.IsMarked))
             {
-                hasWinningSolution = true;
-                foreach (var square in squares)
-                {
-                    square.IsPartOfWinningSolution = true;
-                }
+                winningPatternIds.Add(patternId);
             }
         }
 
-        return hasWinningSolution;
+        return winningPatternIds;
     }
 }

@@ -119,12 +119,12 @@ public class BingoBoardBuilderTests
             .WithWinningPattern(pattern1)
             .WithWinningPattern(pattern2)
             .Build();
+
+        var patternIds1 = board.GetSquare(pattern1[0].Item1, pattern1[0].Item2).PatternIds;
+        var patternIds2 = board.GetSquare(pattern2[0].Item1, pattern2[0].Item2).PatternIds;
         
-        var patternId1 = board.GetSquare(pattern1[0].Item1, pattern1[0].Item2).PatternId;
-        var patternId2 = board.GetSquare(pattern2[0].Item1, pattern2[0].Item2).PatternId;
-        
-        patternId1.Should().NotBeNull();
-        patternId2.Should().NotBeNull();
-        patternId1.Should().NotBe(patternId2);
+        patternIds1.Should().HaveCount(1);
+        patternIds2.Should().HaveCount(1);
+        patternIds1[0].Should().NotBe(patternIds2[0]);
     }
 }

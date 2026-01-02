@@ -35,12 +35,13 @@ public class BingoBoardGeneratorTests
             foreach (var (row, col) in pattern)
             {
                 var square = board.GetSquare(row, col);
-                square.PatternId.Should().NotBeNull();
-
-                if (square.PatternId == null) continue;
+                square.PatternIds.Should().NotBeEmpty();
                 
                 square.Mark();
-                patterns.Add(square.PatternId.Value);
+                foreach (var patternId in square.PatternIds)
+                {
+                    patterns.Add(patternId);
+                }
             }
         }
         patterns.Count.Should().Be(winningPatterns.Count);
