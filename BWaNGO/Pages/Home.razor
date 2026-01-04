@@ -17,14 +17,6 @@
     return;
 }
 
-@* TODO: Make the title editable after a click on something*@
-<MudTextField T="string"
-              Text="Board Title Here"
-              Typo="Typo.h3"
-              Variant="Variant.Text"
-              />
-<br/>
-
 <BingoBoardComponent
     @bind-Board="_board"
     @bind-Board:after="OnBoardChanged"
@@ -35,17 +27,15 @@
     private BingoBoard? _board;
     private List<string> _labels = [];
     private bool _isEditMode = false;
-    
+
     protected override async Task OnInitializedAsync()
     {
         _board = await BingoBoardRepository.Get();
         if (_board is null)
         {
-            Console.WriteLine("Board not found, fetching labels.");
             _labels = await LabelsRepository.Get();
             if (_labels.Count > 0)
             {
-                Console.WriteLine("Labels found, generating new board.");
                 GenerateBoard(_labels);
             }
         }
@@ -55,15 +45,9 @@
 
     private void GenerateBoard(List<string> labels)
     {
-        Console.WriteLine("Generating new board.");
         _board = BingoBoardGenerator.Generate(labels, new StandardBingoPreset());
     }
 
-    private async Task OnBoardChanged()
-    {
-        Console.WriteLine("Board changed in Home component.");
-        await BingoBoardRepository.SaveAsync(_board);
-        Console.WriteLine("Board saved.");
-    }
-
+    private Task OnBoardChanged()
+        => BingoBoardRepository.SaveAsync(_board);
 }

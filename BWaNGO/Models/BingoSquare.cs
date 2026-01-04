@@ -1,5 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace BWaNGO.Models;
 
+[JsonDerivedType(typeof(FreeBingoSquare), nameof(FreeBingoSquare))]
+[JsonDerivedType(typeof(BingoSquare), nameof(BingoSquare))]
 public class BingoSquare(string label, bool isMarked = false)
 {
     /// <summary>
