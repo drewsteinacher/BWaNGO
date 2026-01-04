@@ -1,6 +1,7 @@
 ﻿@inject IBingoBoardRepository BingoBoardRepository
 @inject ILabelsRepository LabelsRepository
 @inject IBingoBoardGenerator BingoBoardGenerator
+@inject IJSRuntime JsRuntime
 
 @page "/"
 @using BWaNGO.Models
@@ -16,6 +17,22 @@
     <MudText>No labels found! Add some labels on <MudLink Href="Labels">the Labels page</MudLink>.</MudText>
     return;
 }
+
+<MudTextField T="string"
+              Typo="Typo.h3"
+              Variant="Variant.Text"
+              @bind-Text="_board!.Name"
+              DebounceInterval="250"
+              OnDebounceIntervalElapsed="OnBoardChanged"
+              AdornmentIcon="@Icons.Material.Filled.Refresh"
+              AdornmentColor="Color.Surface"
+              Adornment="Adornment.End"
+              OnAdornmentClick="RegenerateBoardDialog"
+              AdornmentAriaLabel="Regenerate Board"
+/>
+
+
+<br/>
 
 <BingoBoardComponent
     @bind-Board="_board"
@@ -33,21 +50,31 @@
         _board = await BingoBoardRepository.Get();
         if (_board is null)
         {
-            _labels = await LabelsRepository.Get();
-            if (_labels.Count > 0)
-            {
-                GenerateBoard(_labels);
-            }
+            await GenerateBoard();
         }
 
         await base.OnInitializedAsync();
     }
 
-    private void GenerateBoard(List<string> labels)
+    private async Task GenerateBoard()
     {
-        _board = BingoBoardGenerator.Generate(labels, new StandardBingoPreset());
+        _labels = await LabelsRepository.Get();
+        _board = _labels.Count > 0
+            ? BingoBoardGenerator.Generate(_labels, new StandardBingoPreset())
+            : null;
     }
 
     private Task OnBoardChanged()
         => BingoBoardRepository.SaveAsync(_board);
+    
+    private async Task RegenerateBoardDialog(MouseEventArgs mouseEventArgs)
+    {
+        var isConfirmed = await JsRuntime.InvokeAsync<bool>("confirm", 
+            "Are you sure you want to regenerate the board? The current board will be lost.");
+
+        if (isConfirmed)
+        {
+            await GenerateBoard();
+        }
+    }
 }

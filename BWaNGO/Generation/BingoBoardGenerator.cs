@@ -9,6 +9,7 @@ public class BingoBoardGenerator : IBingoBoardGenerator
     public BingoBoard Generate(IEnumerable<string> labels, IBingoPreset preset)
     {
         var builder = new BingoBoardBuilder()
+            .WithName(preset.DefaultName)
             .WithSize(preset.Size)
             .FromLabels(labels.ToList());
 

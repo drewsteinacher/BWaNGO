@@ -32,6 +32,13 @@ public interface IBingoBoardBuilder
     public BingoBoardBuilder WithWinningPattern(List<(int, int)> patternCoordinates);
     
     /// <summary>
+    /// Specifies the initial name of the bingo board
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public BingoBoardBuilder WithName(string name);
+    
+    /// <summary>
     /// Builds the board to the specifications provided
     /// </summary>
     /// <returns></returns>

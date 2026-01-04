@@ -8,6 +8,8 @@ public class BingoBoardBuilder : IBingoBoardBuilder
 
     private int Columns { get; set; }
     
+    private string Name { get; set; } = string.Empty;
+    
     private Dictionary<(int, int), FreeBingoSquare> CoordinateToFreeSquare { get; set; } = [];
     
     private List<List<(int, int)>> WinningPatternCoordinates { get; set; } = [];
@@ -47,6 +49,13 @@ public class BingoBoardBuilder : IBingoBoardBuilder
     {
         WinningPatternCoordinates.Add(patternCoordinates);
         
+        return this;
+    }
+
+    public BingoBoardBuilder WithName(string name)
+    {
+        Name = name;
+
         return this;
     }
 
@@ -91,6 +100,9 @@ public class BingoBoardBuilder : IBingoBoardBuilder
             }
         }
 
-        return new BingoBoard(boardSquares, Rows, Columns);
+        return new BingoBoard(boardSquares, Rows, Columns)
+        {
+            Name = Name
+        };
     }
 }

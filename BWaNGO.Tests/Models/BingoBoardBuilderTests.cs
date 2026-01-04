@@ -127,4 +127,18 @@ public class BingoBoardBuilderTests
         patternIds2.Should().HaveCount(1);
         patternIds1[0].Should().NotBe(patternIds2[0]);
     }
+
+    [Fact]
+    public void WithName_SetsBoardName()
+    {
+        const int squareSize = 3;
+        const string boardName = "Test Board";
+        var board = new BingoBoardBuilder()
+            .FromLabels(Enumerable.Range(0, squareSize * squareSize).Select(i => i.ToString()).ToList())
+            .WithSize(squareSize)
+            .WithName(boardName)
+            .Build();
+
+        board.Name.Should().Be(boardName);
+    }
 }
