@@ -1,8 +1,10 @@
 @inject ILabelsRepository LabelsRepository
 @inject IJSRuntime JsRuntime
+@inject ClipboardService ClipboardService
 
 @page "/labels"
 @using BWaNGO.Repositories
+@using BWaNGO.Services
 
 <NavigationLock ConfirmExternalNavigation="@CanSaveLabels()"
                 OnBeforeInternalNavigation="UnsavedChangesDialog" />
@@ -18,8 +20,9 @@
 
 <br/>
 
+<!-- TODO: Style this so that it fills the entire vertical space available -->
 <MudTextField T="string"
-              Label="Labels"
+              Label="@_inputLabel"
               Variant="Variant.Filled"
               Lines="25"
               AutoGrow="false"
@@ -27,6 +30,10 @@
               Immediate="true"
               FullWidth="true"
               ShrinkLabel="true"
+              Adornment="!CanSaveLabels() ? Adornment.End : Adornment.None"
+              AdornmentIcon="@_shareIcon"
+              AdornmentColor="@_shareColor"
+              OnAdornmentClick="ShareLabels"
 />
 
 <MudText Typo="Typo.body1" Color="CanSaveLabels() ? Color.Default : Color.Success">
@@ -49,7 +56,11 @@
 @code {
     private string _currentRawLabelText = string.Empty;
     private string _savedRawLabelText = string.Empty;
-
+    
+    private string _shareIcon = Icons.Material.Filled.Share;
+    private Color _shareColor = Color.Surface;
+    private string _inputLabel = "Labels";
+    
     protected override async Task OnInitializedAsync()
     {
         await ReadLabels();
@@ -86,4 +97,19 @@
             context.PreventNavigation();
         }
     }
+
+    private async Task ShareLabels(MouseEventArgs obj)
+    {
+        // TODO: Generate URL with labels as query parameter
+        await ClipboardService.WriteTextAsync("CLICKED SHARE LABELS");
+        
+        (_shareIcon, _shareColor, _inputLabel) = (Icons.Material.Filled.Check, Color.Success, "Labels (URL copied to clipboard!)");
+        StateHasChanged();
+        
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        
+        (_shareIcon, _shareColor, _inputLabel) = (Icons.Material.Filled.Share, Color.Primary, "Labels");
+        StateHasChanged();
+    }
+
 }

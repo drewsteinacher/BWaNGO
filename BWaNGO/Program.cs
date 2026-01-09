@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using BWaNGO;
 using BWaNGO.Generation;
 using BWaNGO.Repositories;
+using BWaNGO.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -18,5 +19,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddScoped<ILabelsRepository, LabelsRepository>();
 builder.Services.AddScoped<IBingoBoardRepository, BingoBoardRepository>();
 builder.Services.AddScoped<IBingoBoardGenerator, BingoBoardGenerator>();
+builder.Services.AddScoped<ClipboardService>();
 
 await builder.Build().RunAsync();
