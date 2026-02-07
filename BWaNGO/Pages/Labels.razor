@@ -1,13 +1,15 @@
-@inject ILabelsRepository LabelsRepository
 @inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
 @inject ClipboardService ClipboardService
+@inject ILabelsRepository LabelsRepository
+@inject IShareService ShareService
 
 @page "/labels"
 @using BWaNGO.Repositories
 @using BWaNGO.Services
 
 <NavigationLock ConfirmExternalNavigation="@CanSaveLabels()"
-                OnBeforeInternalNavigation="UnsavedChangesDialog" />
+                OnBeforeInternalNavigation="UnsavedChangesDialog"/>
 
 <PageTitle>Labels</PageTitle>
 
@@ -15,8 +17,11 @@
 <br/>
 
 <MudText Typo="Typo.body1">Enter custom bingo square labels here, one per line.</MudText>
-<MudText Typo="Typo.body1">American Bingo is usually played with 75 numbers, but cards hold 24 each (the center space is free).</MudText>
-<MudText Typo="Typo.body1">If you do not enter at least 24 labels, the remaining squares will be filled by sampling.</MudText>
+<MudText Typo="Typo.body1">American Bingo is usually played with 75 numbers, but cards hold 24 each (the center space is
+    free).
+</MudText>
+<MudText Typo="Typo.body1">If you do not enter at least 24 labels, the remaining squares will be filled by sampling.
+</MudText>
 
 <br/>
 
@@ -37,7 +42,7 @@
 />
 
 <MudText Typo="Typo.body1" Color="CanSaveLabels() ? Color.Default : Color.Success">
-    @Repositories.LabelsRepository.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved") 
+    @Repositories.LabelsRepository.ParseLabels(_currentRawLabelText).Count Labels @(CanSaveLabels() ? "Unsaved" : "Saved")
 </MudText>
 
 <MudButton Variant="Variant.Outlined"
@@ -54,33 +59,73 @@
 </MudButton>
 
 @code {
+    const string ShareQueryParameterKey = "L";
+
     private string _currentRawLabelText = string.Empty;
-    private string _savedRawLabelText = string.Empty;
-    
+
+    [SupplyParameterFromQuery(Name = "L")] private string SavedRawLabelText { get; set; } = string.Empty;
+
     private string _shareIcon = Icons.Material.Filled.Share;
     private Color _shareColor = Color.Surface;
     private string _inputLabel = "Labels";
-    
+
     protected override async Task OnInitializedAsync()
     {
-        await ReadLabels();
+        if (!string.IsNullOrWhiteSpace(SavedRawLabelText))
+        {
+            try
+            {
+                var isConfirmed = await JsRuntime.InvokeAsync<bool>("confirm",
+                    "Replace current labels with shared labels?");
+                if (isConfirmed)
+                {
+                    SavedRawLabelText = await ShareService.DecodeLabelsPayload(SavedRawLabelText);
+                    _currentRawLabelText = SavedRawLabelText;
+
+                    ClearQueryParameters();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to import labels from URL: " + ex);
+                await JsRuntime.InvokeAsync<bool>("alert", "Failed to import labels from URL.");
+            }
+        }
+        
+        if (string.IsNullOrWhiteSpace(_currentRawLabelText))
+        {
+            await ReadLabels();
+        }
+        
         await base.OnInitializedAsync();
     }
-    
+
     private async Task ReadLabels()
     {
+        
         _currentRawLabelText = await LabelsRepository.GetRaw() ?? string.Empty;
-        _savedRawLabelText = _currentRawLabelText;
+        SavedRawLabelText = _currentRawLabelText;
+            
+        StateHasChanged();
     }
-    
+
+    private void ClearQueryParameters()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var uriWithoutQuery = uri.GetLeftPart(UriPartial.Path);
+        NavigationManager.NavigateTo(uriWithoutQuery, replace: true);
+    }
+
     private Task SaveLabels()
     {
-        _savedRawLabelText = _currentRawLabelText;
+        SavedRawLabelText = _currentRawLabelText;
         return LabelsRepository.SaveAsync(_currentRawLabelText);
     }
 
     private bool CanSaveLabels()
-        => _currentRawLabelText != _savedRawLabelText;
+    {
+        return _currentRawLabelText != SavedRawLabelText;
+    }
 
     private async Task UnsavedChangesDialog(LocationChangingContext context)
     {
@@ -89,7 +134,7 @@
             return;
         }
 
-        var isConfirmed = await JsRuntime.InvokeAsync<bool>("confirm", 
+        var isConfirmed = await JsRuntime.InvokeAsync<bool>("confirm",
             "You have unsaved changes. Are you sure you want to leave?");
 
         if (!isConfirmed)
@@ -100,16 +145,18 @@
 
     private async Task ShareLabels(MouseEventArgs obj)
     {
-        // TODO: Generate URL with labels as query parameter
-        await ClipboardService.WriteTextAsync("CLICKED SHARE LABELS");
-        
+        var sharePayload = await ShareService.EncodeLabelsPayload(SavedRawLabelText);
+        Console.WriteLine("Encoded: " + sharePayload);
+        var shareUrl = NavigationManager.GetUriWithQueryParameter(ShareQueryParameterKey, sharePayload);
+        await ClipboardService.WriteTextAsync(shareUrl);
+        Console.WriteLine("Share: " + shareUrl);
+
         (_shareIcon, _shareColor, _inputLabel) = (Icons.Material.Filled.Check, Color.Success, "Labels (URL copied to clipboard!)");
         StateHasChanged();
-        
+
         await Task.Delay(TimeSpan.FromSeconds(2));
-        
+
         (_shareIcon, _shareColor, _inputLabel) = (Icons.Material.Filled.Share, Color.Primary, "Labels");
         StateHasChanged();
     }
-
 }

@@ -20,5 +20,6 @@ builder.Services.AddScoped<ILabelsRepository, LabelsRepository>();
 builder.Services.AddScoped<IBingoBoardRepository, BingoBoardRepository>();
 builder.Services.AddScoped<IBingoBoardGenerator, BingoBoardGenerator>();
 builder.Services.AddScoped<ClipboardService>();
+builder.Services.AddScoped<IShareService, ShareService>();
 
 await builder.Build().RunAsync();
